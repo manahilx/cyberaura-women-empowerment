@@ -1,0 +1,4 @@
+# CYBERAURA backend dependencies
+# Only Flask is a direct dependency; Werkzeug, Jinja2, itsdangerous, click and
+# blinker are installed automatically as part of Flask.
+Flask>=3.1,<4.0

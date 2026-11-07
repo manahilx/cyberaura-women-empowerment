@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}Evidence Vault — CYBERAURA{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="shell page-hero-grid">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Home</a>{{ ui.icon('arrow-right', 'icon icon-xs') }}<span>Evidence Vault</span></nav>
+      <span class="eyebrow reveal">{{ ui.icon('folder', 'icon icon-xs') }} Privacy-first evidence management</span>
+      <h1 class="reveal reveal-delay-1">Keep it organised.<br>Keep it unchanged.</h1>
+      <p class="reveal reveal-delay-2">Store screenshots, documents and notes in your browser, fingerprint each file with SHA-256, and re-verify at any time that what you hold is byte-for-byte what you first captured.</p>
+      <div class="flex gap-12 wrap mt-16 reveal reveal-delay-3">
+        <span class="pill pill-soft">{{ ui.icon('lock', 'icon icon-xs') }} IndexedDB · this device only</span>
+        <span class="pill pill-outline">{{ ui.icon('fingerprint', 'icon icon-xs') }} Web Crypto SHA-256</span>
+      </div>
+    </div>
+    <div class="page-hero-media reveal reveal-delay-2">
+      <img src="{{ url_for('static', filename='img/evidence-vault.webp') }}" alt="Glass evidence drawer holding document and image cards sealed with glowing fingerprint marks, linked by a chain of hash blocks." width="1000" height="750">
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="shell">
+    <div class="notice notice-warning reveal mb-24">
+      {{ ui.icon('alert', 'icon icon-sm') }}
+      <div><strong>Before you store anything:</strong> this is browser-local demonstration storage. It is <strong>not</strong> an encrypted evidence vault and it is not a substitute for a forensic copy. Do not upload intimate or private images, identity documents, or anything you would not want readable by someone with access to this browser profile. Clearing site data removes these records permanently.</div>
+    </div>
+
+    <div class="workspace">
+      <div class="stack">
+        <div class="panel reveal">
+          <div class="panel-head">
+            <h3>{{ ui.icon('upload', 'icon icon-sm') }} Add evidence</h3>
+            <button type="button" class="btn btn-soft btn-sm" id="addSample">{{ ui.icon('play', 'icon icon-xs') }} Add sample record</button>
+          </div>
+          <div class="panel-body">
+            <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose a demonstration file to add to the vault">
+              <span class="icon-tile">{{ ui.icon('upload', 'icon icon-lg') }}</span>
+              <h4>Drop a demonstration file here, or click to choose</h4>
+              <p>Images, PDFs and text files up to 10&nbsp;MB. The file is hashed in your browser and never uploaded to a server.</p>
+              <input type="file" id="fileInput" accept="image/*,.pdf,.txt,.md,.csv,.json" hidden>
+            </div>
+            <div class="flex gap-12 wrap mt-16">
+              <button type="button" class="btn btn-outline btn-sm" id="addNote">{{ ui.icon('note', 'icon icon-xs') }} Add a text note instead</button>
+              <span class="tiny" style="align-self:center">A note record stores what you observed without attaching a file.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel reveal">
+          <div class="panel-head">
+            <h3>{{ ui.icon('layers', 'icon icon-sm') }} Stored records <span class="pill pill-soft" id="recordCount">0</span></h3>
+            <div class="flex gap-8">
+              <button type="button" class="btn btn-ghost btn-sm" id="exportManifest">{{ ui.icon('download', 'icon icon-xs') }} Export manifest</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="clearVault">{{ ui.icon('trash', 'icon icon-xs') }} Clear all</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="resource-toolbar" style="margin-bottom:20px">
+              <div class="search-wrap">
+                {{ ui.icon('search', 'icon icon-sm') }}
+                <input class="input" type="search" id="vaultSearch" placeholder="Search by name, description or note…" aria-label="Search evidence records">
+              </div>
+              <select class="select" id="vaultSort" style="width:auto" aria-label="Sort evidence records">
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="name">Name A–Z</option>
+                <option value="size">Largest first</option>
+              </select>
+            </div>
+            <div class="filter-chips mb-24" id="vaultFilters" role="group" aria-label="Filter by record type">
+              <button class="chip is-active" data-filter="all" type="button">All records</button>
+              <button class="chip" data-filter="image" type="button">Images</button>
+              <button class="chip" data-filter="document" type="button">Documents</button>
+              <button class="chip" data-filter="note" type="button">Notes</button>
+              <button class="chip" data-filter="verified" type="button">Verified</button>
+            </div>
+            <div id="vaultList">
+              <div class="skeleton" style="height:180px;margin-bottom:16px"></div>
+              <div class="skeleton" style="height:180px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="sticky-col">
+        <div class="card reveal">
+          <h3 style="margin-bottom:18px">Vault status</h3>
+          <div class="ring-wrap" id="vaultRing" style="margin:0 auto 18px"></div>
+          <div class="flex flex-col gap-12">
+            <div class="flex justify-between items-center"><span class="tiny">Records stored</span><strong id="statRecords" style="font-family:var(--font-head)">0</strong></div>
+            <div class="flex justify-between items-center"><span class="tiny">Total size</span><strong id="statSize" style="font-family:var(--font-head)">0 B</strong></div>
+            <div class="flex justify-between items-center"><span class="tiny">Integrity verified</span><strong id="statVerified" style="font-family:var(--font-head)">0</strong></div>
+            <div class="flex justify-between items-center"><span class="tiny">Checks performed</span><strong id="statChecks" style="font-family:var(--font-head)">0</strong></div>
+          </div>
+        </div>
+
+        <div class="card reveal reveal-delay-1">
+          <span class="icon-tile success mb-16">{{ ui.icon('fingerprint') }}</span>
+          <h3 style="margin-bottom:10px">What a hash proves — and what it does not</h3>
+          <p class="tiny mb-16">A SHA-256 fingerprint is a 64-character summary of a file's exact bytes. If the file changes by even one bit, the fingerprint changes completely.</p>
+          <div class="notice notice-success mb-16" style="font-size:.78rem">
+            {{ ui.icon('check', 'icon icon-xs') }}
+            <div><strong>It shows:</strong> the file you hold now is identical to the file you fingerprinted earlier.</div>
+          </div>
+          <div class="notice notice-danger" style="font-size:.78rem">
+            {{ ui.icon('x', 'icon icon-xs') }}
+            <div><strong>It does not show:</strong> that the content is authentic, that it was not edited before capture, or that an allegation is true. Integrity is not proof.</div>
+          </div>
+        </div>
+
+        <div class="notice notice-lav reveal reveal-delay-2">
+          {{ ui.icon('info', 'icon icon-sm') }}
+          <div>Records live in this browser's IndexedDB. They are not synced, not backed up, and not visible to CYBERAURA's server. Export a manifest if you need a portable list of filenames and fingerprints.</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/vault.js') }}" defer></script>
+{% endblock %}

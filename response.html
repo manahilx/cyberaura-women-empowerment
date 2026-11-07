@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}Cyber Response Center — CYBERAURA{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="shell page-hero-grid">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Home</a>{{ ui.icon('arrow-right', 'icon icon-xs') }}<span>Response Center</span></nav>
+      <span class="eyebrow reveal">{{ ui.icon('layers', 'icon icon-xs') }} Personalised cyber response</span>
+      <h1 class="reveal reveal-delay-1">A calm plan,<br>one step at a time.</h1>
+      <p class="reveal reveal-delay-2">Choose the incident type and CYBERAURA builds a phased checklist: what to preserve, what to report, what to secure and what to avoid. Tick items off as you go and download a summary you can keep.</p>
+      <div class="flex gap-12 wrap mt-16 reveal reveal-delay-3">
+        <span class="pill pill-soft">{{ ui.icon('check', 'icon icon-xs') }} Live progress tracking</span>
+        <span class="pill pill-outline">{{ ui.icon('download', 'icon icon-xs') }} Downloadable summary</span>
+      </div>
+    </div>
+    <div class="page-hero-media reveal reveal-delay-2">
+      <img src="{{ url_for('static', filename='img/response-center.webp') }}" alt="A rising pathway of frosted glass steps, each holding a checklist card with completion seals, leading to a protective dome." width="1000" height="750">
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="shell workspace wide-left">
+    <div class="stack">
+      <div class="panel reveal">
+        <div class="panel-head">
+          <h3>{{ ui.icon('plus', 'icon icon-sm') }} Create a response plan</h3>
+        </div>
+        <div class="panel-body">
+          <div class="flex gap-12 wrap items-center">
+            <select class="select" id="planCategory" style="flex:1;min-width:220px" aria-label="Incident type for the new plan">
+              {% for c in categories %}<option value="{{ c.key }}">{{ c.label }}</option>{% endfor %}
+            </select>
+            <button class="btn btn-primary" id="createPlan">{{ ui.icon('layers', 'icon icon-sm') }} Generate checklist</button>
+          </div>
+          <p class="field-help mt-8">Each incident type has its own playbook. Impersonation, account compromise, cyberstalking and image-based abuse all follow different first steps.</p>
+        </div>
+      </div>
+
+      <div class="panel reveal">
+        <div class="panel-head">
+          <h3>{{ ui.icon('folder', 'icon icon-sm') }} Your plans <span class="pill pill-soft" id="planCount">0</span></h3>
+        </div>
+        <div class="panel-body">
+          <div id="planList" class="grid-2">
+            <div class="skeleton" style="height:96px"></div>
+            <div class="skeleton" style="height:96px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="activePlan"></div>
+    </div>
+
+    <aside class="sticky-col">
+      <div class="card reveal">
+        <h3 style="margin-bottom:18px">Plan progress</h3>
+        <div id="planRing" style="margin:0 auto 18px"></div>
+        <div class="progress-track mb-16"><div class="progress-fill" id="planBar"></div></div>
+        <p class="tiny text-center" id="planProgressText">Select or create a plan to begin.</p>
+        <div class="divider"></div>
+        <div class="flex flex-col gap-12">
+          <button class="btn btn-outline btn-block" id="downloadPlan" disabled>{{ ui.icon('download', 'icon icon-sm') }} Download summary</button>
+          <button class="btn btn-ghost btn-block" id="deletePlan" disabled>{{ ui.icon('trash', 'icon icon-sm') }} Delete this plan</button>
+        </div>
+      </div>
+
+      <div class="card reveal reveal-delay-1">
+        <span class="icon-tile warning mb-16">{{ ui.icon('alert') }}</span>
+        <h3 style="margin-bottom:10px">What a checklist cannot promise</h3>
+        <p class="tiny">{{ disclaimer }}</p>
+        <div class="divider"></div>
+        <p class="tiny">If a situation involves immediate physical danger, contact emergency services before working through any online steps. Verified numbers are in the <a href="{{ url_for('main.resources') }}">Resource Navigator</a>.</p>
+      </div>
+
+      <div class="notice notice-lav reveal reveal-delay-2">
+        {{ ui.icon('link', 'icon icon-sm') }}
+        <div>Run a <a href="{{ url_for('main.threat') }}">threat analysis</a> first and use “Build response plan” to carry the detected category straight into the right playbook.</div>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/response.js') }}" defer></script>
+{% endblock %}

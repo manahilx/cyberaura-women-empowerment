@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}Login — CYBERAURA{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-visual">
+    <img src="{{ url_for('static', filename='img/account-protection.webp') }}" alt="An authentic profile card with a verified seal beside a fading duplicate, separated by a protective scanning beam." width="1000" height="750">
+    <div class="auth-visual-copy">
+      <span class="eyebrow" style="background:rgba(255,255,255,.16);color:#fff">{{ ui.icon('lock', 'icon icon-xs') }} Private by design</span>
+      <h2>Your workspace,<br>only yours.</h2>
+      <p>Analyses, response plans and assessments are scoped to your account and never mixed with anyone else's. Evidence stays in your browser — it is never uploaded.</p>
+      <div class="flex gap-12 wrap mt-16">
+        <span class="pill" style="background:rgba(255,255,255,.16);color:#fff">{{ ui.icon('shield-check', 'icon icon-xs') }} Hashed passwords</span>
+        <span class="pill" style="background:rgba(255,255,255,.16);color:#fff">{{ ui.icon('privacy', 'icon icon-xs') }} CSRF protected</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-card">
+      <a class="brand" href="{{ url_for('main.index') }}" style="margin-bottom:28px">{{ ui.logo() }}<span class="brand-text"><span class="brand-name">CYBERAURA</span></span></a>
+      <h1>Welcome back</h1>
+      <p class="muted" style="margin-bottom:24px">Sign in to return to your security dashboard.</p>
+
+      {% if error %}
+      <div class="form-error mb-16">{{ ui.icon('alert', 'icon icon-sm') }}<span>{{ error }}</span></div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('main.login') }}{{ '?next=' ~ (request.args.get('next')|urlencode) if request.args.get('next') else '' }}" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="field">
+          <label class="field-label" for="email">Email address</label>
+          <input class="input" type="email" id="email" name="email" autocomplete="email" required placeholder="you@example.com" value="{{ request.form.get('email', '') }}">
+        </div>
+        <div class="field">
+          <label class="field-label" for="password">Password</label>
+          <input class="input" type="password" id="password" name="password" autocomplete="current-password" required placeholder="Your password">
+        </div>
+        <button class="btn btn-primary btn-block btn-lg" type="submit">{{ ui.icon('arrow-right', 'icon icon-sm') }} Sign in</button>
+      </form>
+
+      <div class="divider"></div>
+
+      <form method="post" action="{{ url_for('main.demo') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
+        <button class="btn btn-soft btn-block" type="submit">{{ ui.icon('play', 'icon icon-sm') }} Try the demo workspace</button>
+      </form>
+      <p class="field-help text-center mt-8">No account needed. A disposable workspace pre-filled with fictional sample data.</p>
+
+      <p class="auth-alt">New to CYBERAURA? <a href="{{ url_for('main.register') }}">Create an account</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

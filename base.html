@@ -1,0 +1,157 @@
+{% import 'macros.html' as ui %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="description" content="CYBERAURA — AI-assisted digital threat intelligence and privacy protection for women and girls. Your Identity. Your Privacy. Your Digital Control.">
+  <meta name="theme-color" content="#514078">
+  <title>{% block title %}CYBERAURA — Your Identity. Your Privacy. Your Digital Control.{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body data-page="{{ page }}" data-auth="{{ '1' if current_user else '0' }}">
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div class="bg-field" aria-hidden="true">
+    <span class="aurora aurora-a"></span>
+    <span class="aurora aurora-b"></span>
+    <span class="aurora aurora-c"></span>
+    <span class="grain"></span>
+  </div>
+
+  <header class="site-header" id="siteHeader">
+    <div class="shell header-inner">
+      <a class="brand" href="{{ url_for('main.index') }}" aria-label="CYBERAURA home">
+        {{ ui.logo() }}
+        <span class="brand-text">
+          <span class="brand-name">CYBERAURA</span>
+          <span class="brand-tag">Digital threat intelligence</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Primary">
+        {% for endpoint, label, key in nav_items %}
+          <a href="{{ url_for(endpoint) }}" class="nav-link {{ 'is-active' if page == key }}" {% if page == key %}aria-current="page"{% endif %}>{{ label }}</a>
+        {% endfor %}
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="quick-exit" id="quickExit" title="Leave this site immediately (or press Escape twice)">
+          {{ ui.icon('logout', 'icon icon-sm') }}<span>Quick exit</span>
+        </button>
+        {% if current_user %}
+          <span class="user-chip" title="{{ current_user.name }}">
+            <span class="avatar">{{ current_user.name[:1]|upper }}</span>
+            <span class="user-name">{{ current_user.name.split(' (')[0] }}</span>
+          </span>
+          <form method="post" action="{{ url_for('main.logout') }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button class="btn btn-ghost btn-sm" type="submit">Sign out</button>
+          </form>
+        {% else %}
+          <a class="btn btn-ghost btn-sm" href="{{ url_for('main.login') }}">Login</a>
+          <a class="btn btn-primary btn-sm" href="{{ url_for('main.register') }}">Get Started</a>
+        {% endif %}
+        <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobileNav" aria-label="Open navigation menu">
+          {{ ui.icon('menu') }}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav" hidden>
+    <div class="mobile-nav-panel" role="dialog" aria-modal="true" aria-label="Navigation">
+      <div class="mobile-nav-head">
+        <span class="brand-name">CYBERAURA</span>
+        <button type="button" class="icon-btn" id="navClose" aria-label="Close navigation">{{ ui.icon('x') }}</button>
+      </div>
+      <nav class="mobile-links" aria-label="Mobile">
+        {% for endpoint, label, key in nav_items %}
+          <a href="{{ url_for(endpoint) }}" class="mobile-link {{ 'is-active' if page == key }}" style="--i: {{ loop.index }}">
+            {{ ui.icon({'home':'shield','dashboard':'gauge','threat':'radar','vault':'folder','response':'layers','privacy':'privacy','resources':'compass','community':'users','about':'heart'}[key], 'icon icon-sm') }}
+            <span>{{ label }}</span>{{ ui.icon('arrow-right', 'icon icon-xs trailing') }}
+          </a>
+        {% endfor %}
+      </nav>
+      <div class="mobile-nav-foot">
+        {% if current_user %}
+          <form method="post" action="{{ url_for('main.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button class="btn btn-outline btn-block" type="submit">Sign out</button>
+          </form>
+        {% else %}
+          <a class="btn btn-outline btn-block" href="{{ url_for('main.login') }}">Login</a>
+          <a class="btn btn-primary btn-block" href="{{ url_for('main.register') }}">Get Started</a>
+        {% endif %}
+        <form method="post" action="{{ url_for('main.demo') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button class="btn btn-soft btn-block" type="submit">{{ ui.icon('play', 'icon icon-sm') }} Try Demo</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <main id="main" class="page-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="{{ url_for('main.index') }}">{{ ui.logo() }}<span class="brand-text"><span class="brand-name">CYBERAURA</span></span></a>
+          <p class="footer-tag">Your Identity. Your Privacy. Your Digital Control.</p>
+          <p class="footer-note">An AI-assisted digital safety and privacy platform built for women and girls. Prototype capabilities are labelled throughout; evidence stays in your browser.</p>
+          <div class="footer-badges">
+            <span class="pill pill-soft">{{ ui.icon('lock', 'icon icon-xs') }} Local-first evidence</span>
+            <span class="pill pill-soft">{{ ui.icon('accessibility', 'icon icon-xs') }} Accessibility minded</span>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Platform</h3>
+          <a href="{{ url_for('main.threat') }}">Threat Interpreter</a>
+          <a href="{{ url_for('main.vault') }}">Evidence Vault</a>
+          <a href="{{ url_for('main.response') }}">Response Center</a>
+          <a href="{{ url_for('main.privacy') }}">Exposure Assessment</a>
+        </div>
+        <div class="footer-col">
+          <h3>Protection</h3>
+          <a href="{{ url_for('main.resources') }}">Pakistan Resource Navigator</a>
+          <a href="{{ url_for('main.resources') }}#learning">Digital safety learning</a>
+          <a href="{{ url_for('main.about') }}#privacy">Privacy commitments</a>
+          <a href="{{ url_for('main.about') }}#accessibility">Accessibility statement</a>
+        </div>
+        <div class="footer-col">
+          <h3>Community</h3>
+          <a href="{{ url_for('main.community') }}">Women's Safety Hub</a>
+          <a href="{{ url_for('main.community') }}#feedback">Anonymous safety feedback</a>
+          <a href="{{ url_for('main.community') }}#suggestions">Suggestions board</a>
+          <a href="{{ url_for('main.about') }}">About CYBERAURA</a>
+          <a href="{{ url_for('main.about') }}#impact">Impact indicators</a>
+        </div>
+      </div>
+      <div class="footer-base">
+        <span>© 2026 CYBERAURA · Special category: Women Empowerment</span>
+        <span class="footer-disclaimer">Preliminary guidance, not legal advice. Demonstration statistics are sample data.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-region" id="toastRegion" role="status" aria-live="polite"></div>
+
+  <div class="modal-root" id="modalRoot" hidden>
+    <div class="modal-scrim" data-modal-close></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button type="button" class="icon-btn modal-x" data-modal-close aria-label="Close dialog">{{ ui.icon('x') }}</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/core.js') }}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

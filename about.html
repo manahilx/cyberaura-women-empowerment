@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}About & Women Empowerment — CYBERAURA{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="shell page-hero-grid">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Home</a>{{ ui.icon('arrow-right', 'icon icon-xs') }}<span>About</span></nav>
+      <span class="eyebrow reveal">{{ ui.icon('heart', 'icon icon-xs') }} Special category · Women Empowerment</span>
+      <h1 class="reveal reveal-delay-1">Built with women,<br>for digital control.</h1>
+      <p class="reveal reveal-delay-2">CYBERAURA exists because the online world was not designed with women's safety in mind. We turn confusing, frightening digital threats into clear understanding, organised evidence and a calm plan of action — without ever taking ownership of a woman's identity or data away from her.</p>
+      <div class="flex gap-12 wrap mt-16 reveal reveal-delay-3">
+        <a class="btn btn-primary" href="#participate">{{ ui.icon('users', 'icon icon-sm') }} Shape the platform</a>
+        <a class="btn btn-outline" href="#impact">{{ ui.icon('chart', 'icon icon-sm') }} See the impact</a>
+      </div>
+    </div>
+    <div class="page-hero-media reveal reveal-delay-2">
+      <img src="{{ url_for('static', filename='img/women-community.webp') }}" alt="A diverse group of women collaborating around glowing devices, supporting each other's digital independence." width="1024" height="768">
+    </div>
+  </div>
+</section>
+
+<section class="section-tight" style="padding-top:8px">
+  <div class="shell">
+    <div class="grid-3">
+      <div class="card card-hover reveal">
+        <span class="icon-tile mb-16">{{ ui.icon('target') }}</span>
+        <h3 style="margin-bottom:10px">Our mission</h3>
+        <p class="tiny">To give every woman and girl the intelligence, tools and confidence to understand digital threats, protect her privacy and respond to incidents with dignity — on her own terms.</p>
+      </div>
+      <div class="card card-hover reveal reveal-delay-1">
+        <span class="icon-tile info mb-16">{{ ui.icon('privacy') }}</span>
+        <h3 style="margin-bottom:10px">Our promise</h3>
+        <p class="tiny">Privacy is the product, not a policy page. Evidence stays in your browser, narratives are never stored, and every prototype capability is labelled honestly. You remain in control.</p>
+      </div>
+      <div class="card card-hover reveal reveal-delay-2">
+        <span class="icon-tile success mb-16">{{ ui.icon('shield-heart') }}</span>
+        <h3 style="margin-bottom:10px">Our approach</h3>
+        <p class="tiny">Not a generic safety website. A modern threat-intelligence platform: classify, preserve, assess, respond and connect to verified official support — a complete journey.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell">
+    <div class="section-head center reveal">
+      <span class="eyebrow">{{ ui.icon('alert', 'icon icon-xs') }} The problem</span>
+      <h2>The digital challenges<br>women and girls face</h2>
+      <p>Online abuse is targeted, persistent and deeply personal. These are the patterns CYBERAURA is designed to help make sense of — each one mapped to a response playbook.</p>
+    </div>
+    <div class="grid-3">
+      {% set challenges = [
+        ('eye', 'Cyberstalking', 'Persistent monitoring, location tracking and unwanted contact that follows a person across platforms and into physical space.', 'danger'),
+        ('masks', 'Impersonation', 'Fake accounts using a woman’s name and photographs to deceive her contacts, damage her reputation or extract information.', 'warning'),
+        ('message', 'Online harassment', 'Coordinated abuse, hateful messages and pile-ons designed to silence women’s participation in public digital life.', 'info'),
+        ('alert', 'Blackmail & threats', 'Demands backed by threats to publish private material or harm — pressure that escalates when engaged with.', 'danger'),
+        ('image', 'Image-based abuse', 'Manipulated images and deepfakes, and the non-consensual sharing of intimate material, used to humiliate and control.', 'warning'),
+        ('globe', 'Privacy exposure', 'Personal details, routines and location signals scattered across profiles that make targeting and stalking easier.', 'info')
+      ] %}
+      {% for icon, title, body, tone in challenges %}
+      <div class="card card-hover reveal reveal-delay-{{ loop.index0 % 3 }}">
+        <span class="icon-tile {{ tone }} mb-16">{{ ui.icon(icon) }}</span>
+        <h3 style="margin-bottom:10px;font-size:1.05rem">{{ title }}</h3>
+        <p class="tiny">{{ body }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="shell">
+    <div class="empower reveal">
+      <img class="empower-img" src="{{ url_for('static', filename='img/empowerment-banner.webp') }}" alt="" aria-hidden="true" width="1600" height="914">
+      <div class="empower-inner">
+        <span class="eyebrow">{{ ui.icon('sparkles', 'icon icon-xs') }} Digital inclusion</span>
+        <h2>Empowerment is the ability<br>to stay online safely.</h2>
+        <p>Forcing women offline is not protection — it is exclusion. CYBERAURA supports digital inclusion by helping women remain present in education, work and public life with the knowledge and tools to defend their space. Safety that preserves participation, not retreat.</p>
+        <div class="empower-stats">
+          <div class="empower-stat"><strong data-count="8">0</strong><span>incident categories understood</span></div>
+          <div class="empower-stat"><strong data-count="8">0</strong><span>verified support routes mapped</span></div>
+          <div class="empower-stat"><strong data-count="100" data-suffix="%">0</strong><span>of evidence kept on your device</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="participate" style="background:linear-gradient(180deg, transparent, rgba(234,228,244,.4) 30%, transparent)">
+  <div class="shell">
+    <div class="showcase">
+      <div class="showcase-media reveal">
+        <img src="{{ url_for('static', filename='img/women-digital-independence.webp') }}" alt="A woman confidently steering her own digital identity, surrounded by protective interfaces she controls." width="1000" height="1000">
+      </div>
+      <div class="reveal reveal-delay-1">
+        <span class="eyebrow">{{ ui.icon('users', 'icon icon-xs') }} Co-design with the community</span>
+        <h2 style="margin-bottom:16px">Women shape every feature</h2>
+        <p class="muted" style="margin-bottom:22px">CYBERAURA is built <em>with</em> the women it serves, not just for them. Participation is concrete and ongoing:</p>
+        <ul class="feature-list">
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Feedback loops</strong><span>Every analysis and checklist ends with a chance to tell us what was confusing, missing or wrong — directly below.</span></div></li>
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Usability testing</strong><span>Women and girls trial each flow with fictional scenarios, so language, steps and visuals are tested by the people who will rely on them.</span></div></li>
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Community consultation</strong><span>Survivors, students, educators and advocates review the playbooks and resource directory before they ship, keeping guidance grounded in lived reality.</span></div></li>
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Accessible by default</strong><span>Plain language, keyboard navigation, reduced-motion support and mobile-first layouts are requirements, not afterthoughts.</span></div></li>
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>A standing community hub</strong><span>The Women's Safety Feedback &amp; Resource Hub collects anonymous challenge notes and a supported suggestions board, so lived experience keeps steering what gets built.</span></div></li>
+        </ul>
+        <div class="flex gap-12 wrap mt-24">
+          <a class="btn btn-primary" href="#contact">{{ ui.icon('message', 'icon icon-sm') }} Share your feedback</a>
+          <a class="btn btn-outline" href="{{ url_for('main.community') }}">{{ ui.icon('users', 'icon icon-sm') }} Open the community hub</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="impact">
+  <div class="shell">
+    <div class="section-head center reveal">
+      <span class="eyebrow">{{ ui.icon('chart', 'icon icon-xs') }} Impact indicators</span>
+      <h2>Measured in completed actions,<br>not page views</h2>
+      <p>These counters track meaningful safety actions. The baseline figures are <strong>sample demonstration data</strong>, not real-world impact claims; your own actions in this prototype increment them.</p>
+    </div>
+    <div class="stat-grid">
+      {% set stats = [
+        ('assessments_completed', 'Users completing privacy assessments', 'privacy'),
+        ('response_plans_generated', 'Incident response plans generated', 'layers'),
+        ('integrity_checks_completed', 'Evidence integrity checks completed', 'fingerprint'),
+        ('recommendations_completed', 'Security recommendations completed', 'check'),
+        ('learning_completed', 'Digital safety learning activities completed', 'book')
+      ] %}
+      {% for key, label, icon in stats %}
+      <div class="stat-card reveal reveal-delay-{{ loop.index }}">
+        <span class="icon-tile" style="margin-bottom:14px">{{ ui.icon(icon, 'icon icon-sm') }}</span>
+        <div class="stat-value" data-count="{{ impact.get(key, 0) }}">0</div>
+        <div class="stat-label">{{ label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="tiny text-center mt-16 reveal">Sample data for demonstration. Counters reset when the local database is recreated.</p>
+  </div>
+</section>
+
+<section class="section-tight" style="padding-top:0">
+  <div class="shell">
+    <div class="grid-2">
+      <div class="panel reveal" id="privacy">
+        <div class="panel-head"><h3>{{ ui.icon('lock', 'icon icon-sm') }} Privacy commitments</h3></div>
+        <div class="panel-body">
+          <ul class="feature-list">
+            <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Local-first evidence</strong><span>Files and hashes live in your browser's IndexedDB. They are never uploaded to a server or an AI service.</span></div></li>
+            <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Minimal collection</strong><span>Incident narratives are processed in memory and never written to disk. Only non-sensitive metadata is stored.</span></div></li>
+            <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>No surveillance</strong><span>We never monitor your devices, accounts or social media, and never run unauthorized scans.</span></div></li>
+            <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Your data, your choice</strong><span>Clear your workspace at any time from the dashboard. Quick exit leaves the site instantly.</span></div></li>
+            <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Honest labelling</strong><span>Simulated analyses, sample statistics and prototype limits are always stated plainly.</span></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel reveal reveal-delay-1" id="accessibility">
+        <div class="panel-head"><h3>{{ ui.icon('accessibility', 'icon icon-sm') }} Accessibility commitments</h3></div>
+        <div class="panel-body">
+          <ul class="feature-list">
+            <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Keyboard first</strong><span>Every control is reachable and operable by keyboard, with visible focus and a skip-to-content link.</span></div></li>
+            <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Reduced motion</strong><span>Animations respect your system's reduced-motion preference and never block content.</span></div></li>
+            <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Readable contrast</strong><span>Text and controls meet readable contrast against the calm lavender palette.</span></div></li>
+            <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Plain language</strong><span>Guidance is written to be understood under stress, on a small screen, by a first-time user.</span></div></li>
+            <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span><div><strong>Responsive everywhere</strong><span>Layouts adapt from desktop to mobile so help is reachable on whatever device is at hand.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact" style="background:linear-gradient(180deg, transparent, rgba(234,228,244,.45) 30%, transparent)">
+  <div class="shell-narrow">
+    <div class="section-head center reveal">
+      <span class="eyebrow" style="margin-inline:auto">{{ ui.icon('message', 'icon icon-xs') }} Contact & feedback</span>
+      <h2>Help us build it better</h2>
+      <p>Tell us what would make CYBERAURA more useful, clearer or safer. Feedback is recorded for the community design review. Please do not include personal or sensitive information.</p>
+    </div>
+    <div class="card reveal">
+      <form id="feedbackForm" novalidate>
+        <div class="form-error" id="feedbackError" hidden></div>
+        <div class="field">
+          <label class="field-label" for="feedbackRole">I am a…</label>
+          <select class="select" id="feedbackRole" name="role">
+            <option>Community member</option>
+            <option>Student</option>
+            <option>Educator</option>
+            <option>Survivor / advocate</option>
+            <option>Security professional</option>
+            <option>Developer / designer</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="feedbackMessage">Your feedback</label>
+          <textarea class="textarea" id="feedbackMessage" name="message" rows="5" maxlength="2000" placeholder="What worked, what was confusing, what is missing…"></textarea>
+          <div class="flex justify-between items-center mt-8">
+            <span class="field-help">At least 10 characters. No personal or sensitive details.</span>
+            <span class="char-count tiny"><span id="feedbackCount">0</span>/2000</span>
+          </div>
+        </div>
+        <label class="check-line mb-16">
+          <input type="checkbox" id="feedbackConsent">
+          <span>I confirm this feedback contains no personal or sensitive information, and I consent to it being recorded for the community design review.</span>
+        </label>
+        <button class="btn btn-primary btn-block mt-16" type="submit" id="feedbackSubmit">{{ ui.icon('arrow-right', 'icon icon-sm') }} Send feedback</button>
+      </form>
+      <div class="notice notice-success mt-16" id="feedbackSuccess" hidden>
+        {{ ui.icon('check', 'icon icon-sm') }}<div>Thank you. Your feedback has been recorded for the community design review.</div>
+      </div>
+    </div>
+    <p class="tiny text-center mt-16 reveal">Future impact goals: expand verified regional resources, add Urdu-language guidance, and grow community co-design into every release.</p>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/about.js') }}" defer></script>
+{% endblock %}

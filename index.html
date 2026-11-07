@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}CYBERAURA — Your Digital World. Your Rules.{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+  <div class="shell hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow reveal">{{ ui.icon('sparkles', 'icon icon-xs') }} Women Empowerment · Threat Intelligence</span>
+      <h1 class="reveal reveal-delay-1">Your Digital World.<br><span class="grad">Your Rules.</span></h1>
+      <p class="hero-sub reveal reveal-delay-2">Understand digital threats, protect your privacy and take control of your online identity with intelligent cybersecurity guidance.</p>
+      <div class="hero-cta reveal reveal-delay-3">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('main.privacy') }}">{{ ui.icon('shield-check', 'icon icon-sm') }} Start Security Check</a>
+        <a class="btn btn-outline btn-lg" href="#features">Explore Platform {{ ui.icon('arrow-right', 'icon icon-sm') }}</a>
+      </div>
+      <div class="hero-meta reveal reveal-delay-4">
+        <span class="hero-meta-item">{{ ui.icon('lock', 'icon icon-sm') }} Evidence stays in your browser</span>
+        <span class="hero-meta-item">{{ ui.icon('fingerprint', 'icon icon-sm') }} SHA-256 integrity checks</span>
+        <span class="hero-meta-item">{{ ui.icon('badge', 'icon icon-sm') }} Verified Pakistan resources</span>
+      </div>
+      <form method="post" action="{{ url_for('main.demo') }}" class="mt-24 reveal reveal-delay-4">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button class="btn btn-soft" type="submit">{{ ui.icon('play', 'icon icon-sm') }} Try Demo — no personal data needed</button>
+      </form>
+    </div>
+
+    <div class="hero-visual reveal reveal-delay-2">
+      <span class="hero-ring r1" aria-hidden="true"></span>
+      <span class="hero-ring r2" aria-hidden="true"></span>
+      <div class="hero-frame">
+        <img src="{{ url_for('static', filename='img/hero-shield.webp') }}" alt="A translucent purple security shield surrounded by orbiting identity, document, padlock and threat-radar panels connected by a light network." width="1400" height="933" fetchpriority="high">
+      </div>
+      <div class="float-chip chip-a">
+        <span class="icon-tile success">{{ ui.icon('shield-check', 'icon icon-sm') }}</span>
+        <span>Identity protected<small>Privacy readiness monitored</small></span>
+      </div>
+      <div class="float-chip chip-b">
+        <span class="icon-tile warning">{{ ui.icon('radar', 'icon icon-sm') }}</span>
+        <span>Threat interpreted<small>8 incident categories</small></span>
+      </div>
+      <div class="float-chip chip-c">
+        <span class="icon-tile">{{ ui.icon('fingerprint', 'icon icon-sm') }}</span>
+        <span>Evidence fingerprinted<small>SHA-256 · local only</small></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="shell">
+    <div class="trust-strip">
+      {% set trust = [
+        ('lock', 'Local-first by design', 'Evidence files and screenshots never leave your device. Hashing runs in your browser.'),
+        ('eye', 'Transparent analysis', 'Every result shows which signals fired and whether a model or the rule engine produced it.'),
+        ('badge', 'Verified support routes', 'Pakistan resources link to official agency pages, with contacts only where published.'),
+        ('accessibility', 'Dignity and access', 'Keyboard navigation, reduced-motion support and plain language throughout.')
+      ] %}
+      {% for icon, title, text in trust %}
+      <div class="trust-item reveal reveal-delay-{{ loop.index }}">
+        <span class="icon-tile">{{ ui.icon(icon) }}</span>
+        <div><h4>{{ title }}</h4><p>{{ text }}</p></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="shell">
+    <div class="section-head center reveal">
+      <span class="eyebrow">{{ ui.icon('grid', 'icon icon-xs') }} The platform</span>
+      <h2>Five connected tools, one calm workflow</h2>
+      <p>From the first confusing message to a preserved, organised response — CYBERAURA keeps each step understandable and in your control.</p>
+    </div>
+
+    <div class="bento">
+      <article class="card card-hover bento-card wide reveal">
+        <div class="bento-media"><img src="{{ url_for('static', filename='img/threat-interpreter.webp') }}" alt="Isometric illustration of a threat-analysis console with a radar sweep, alert cards and a magnifying lens over a message." loading="lazy" width="1000" height="750"></div>
+        <span class="icon-tile">{{ ui.icon('radar') }}</span>
+        <h3>AI Threat Interpreter</h3>
+        <p>Describe what happened in your own words. CYBERAURA classifies the incident across eight categories, explains the warning signs it detected and ranks the risk — with the matched signals shown, never hidden.</p>
+        <a class="bento-link" href="{{ url_for('main.threat') }}">Open the interpreter {{ ui.icon('arrow-right', 'icon icon-sm') }}</a>
+      </article>
+
+      <article class="card card-hover bento-card reveal reveal-delay-1">
+        <span class="icon-tile">{{ ui.icon('gauge') }}</span>
+        <h3>Security Dashboard</h3>
+        <p>Readiness score, threat summary, evidence status and response progress in one place.</p>
+        <div class="dash-mini" aria-hidden="true">
+          <svg viewBox="0 0 200 74" class="dash-mini-svg">
+            <defs><linearGradient id="mini-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#9583B9" stop-opacity=".45"/><stop offset="100%" stop-color="#9583B9" stop-opacity="0"/></linearGradient></defs>
+            <path d="M4 58 L36 46 L68 50 L100 32 L132 36 L164 18 L196 12 L196 70 L4 70 Z" fill="url(#mini-area)"/>
+            <path d="M4 58 L36 46 L68 50 L100 32 L132 36 L164 18 L196 12" fill="none" stroke="#514078" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="mini-line"/>
+            <circle cx="196" cy="12" r="4" fill="#fff" stroke="#514078" stroke-width="2.4"/>
+          </svg>
+          <div class="dash-mini-bars"><span style="--h:42%"></span><span style="--h:66%"></span><span style="--h:54%"></span><span style="--h:82%"></span><span style="--h:71%"></span></div>
+        </div>
+        <a class="bento-link" href="{{ url_for('main.dashboard') }}">View dashboard {{ ui.icon('arrow-right', 'icon icon-sm') }}</a>
+      </article>
+
+      <article class="card card-hover bento-card reveal">
+        <div class="bento-media"><img src="{{ url_for('static', filename='img/evidence-vault.webp') }}" alt="Illustration of a glass evidence drawer holding document cards sealed with glowing fingerprint marks and linked by a hash chain." loading="lazy" width="1000" height="750"></div>
+        <span class="icon-tile success">{{ ui.icon('folder') }}</span>
+        <h3>Evidence Vault</h3>
+        <p>Organise screenshots, URLs and notes locally, fingerprint each file with SHA-256 and re-verify integrity at any time.</p>
+        <a class="bento-link" href="{{ url_for('main.vault') }}">Open the vault {{ ui.icon('arrow-right', 'icon icon-sm') }}</a>
+      </article>
+
+      <article class="card card-hover bento-card reveal reveal-delay-1">
+        <div class="bento-media"><img src="{{ url_for('static', filename='img/response-center.webp') }}" alt="Illustration of a rising pathway of glass steps, each holding a checklist card, leading to a protective dome." loading="lazy" width="1000" height="750"></div>
+        <span class="icon-tile">{{ ui.icon('layers') }}</span>
+        <h3>Response Center</h3>
+        <p>A phased, incident-specific checklist with live progress and a downloadable summary you can keep or share.</p>
+        <a class="bento-link" href="{{ url_for('main.response') }}">Build a response plan {{ ui.icon('arrow-right', 'icon icon-sm') }}</a>
+      </article>
+
+      <article class="card card-hover bento-card reveal reveal-delay-2">
+        <div class="bento-media"><img src="{{ url_for('static', filename='img/privacy-assessment.webp') }}" alt="Illustration of a circular privacy gauge ring surrounded by floating chips for phone, email, location and key." loading="lazy" width="1000" height="750"></div>
+        <span class="icon-tile info">{{ ui.icon('privacy') }}</span>
+        <h3>Exposure Assessment</h3>
+        <p>Eight honest questions produce a transparent 0–100 readiness score and a prioritised list of what to close first.</p>
+        <a class="bento-link" href="{{ url_for('main.privacy') }}">Check your exposure {{ ui.icon('arrow-right', 'icon icon-sm') }}</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:linear-gradient(180deg, rgba(234,228,244,.42), rgba(248,247,251,0));">
+  <div class="shell">
+    <div class="section-head center reveal">
+      <span class="eyebrow">{{ ui.icon('compass', 'icon icon-xs') }} How it works</span>
+      <h2>Four steps from confusion to control</h2>
+      <p>No account is required to explore. Start a demo workspace and the whole journey works with fictional sample data.</p>
+    </div>
+    <div class="steps">
+      {% set steps = [
+        ('1', 'radar', 'Understand', 'Describe the incident. Get a category, a risk level and the exact warning signs behind the result.'),
+        ('2', 'fingerprint', 'Preserve', 'Capture URLs, screenshots and notes in the local vault, then fingerprint them with SHA-256.'),
+        ('3', 'layers', 'Respond', 'Follow a phased checklist built for your incident type and track what is already done.'),
+        ('4', 'heart', 'Connect', 'Reach verified Pakistani agencies and women’s support organisations with the right context ready.')
+      ] %}
+      {% for num, icon, title, text in steps %}
+      <div class="step reveal reveal-delay-{{ loop.index }}">
+        <div class="step-num">{{ ui.icon(icon, 'icon icon-lg') }}</div>
+        <h4>{{ num }}. {{ title }}</h4>
+        <p>{{ text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell">
+    <div class="showcase reveal">
+      <div class="showcase-media">
+        <img src="{{ url_for('static', filename='img/resources-network.webp') }}" alt="Illustration of a central hub connecting to five institution cards marked with civic, shield, helping-hand, headset and book glyphs." loading="lazy" width="1000" height="750">
+        <div class="showcase-badge"><span class="icon-tile success">{{ ui.icon('badge', 'icon icon-sm') }}</span><div><strong>8 verified routes</strong><span>Official .gov.pk sources</span></div></div>
+      </div>
+      <div class="showcase-copy">
+        <span class="eyebrow">{{ ui.icon('compass', 'icon icon-xs') }} Pakistan Safety Resource Navigator</span>
+        <h2>The right door, not a list of dead ends</h2>
+        <p>Knowing that something is wrong is only half the problem. Knowing where to take it is the other half. The navigator separates criminal complaints, technical incidents, women's support and emergencies — so you are not guessing which agency handles what.</p>
+        <ul class="feature-list">
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span> NCCIA complaint portal and National CERT incident reporting, clearly separated.</li>
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span> Contact details only where the organisation publishes them itself.</li>
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span> Search and filter by incident type, with guidance on what to prepare.</li>
+        </ul>
+        <a class="btn btn-primary" href="{{ url_for('main.resources') }}">Open the navigator {{ ui.icon('arrow-right', 'icon icon-sm') }}</a>
+      </div>
+    </div>
+
+    <div class="showcase reverse reveal">
+      <div class="showcase-media">
+        <img src="{{ url_for('static', filename='img/account-protection.webp') }}" alt="Two profile cards side by side: an authentic one with a verified seal and a fading duplicate outlined in amber, separated by a scanning beam." loading="lazy" width="1000" height="750">
+        <div class="showcase-badge"><span class="icon-tile warning">{{ ui.icon('masks', 'icon icon-sm') }}</span><div><strong>Impersonation aware</strong><span>Pattern-based detection</span></div></div>
+      </div>
+      <div class="showcase-copy">
+        <span class="eyebrow">{{ ui.icon('masks', 'icon icon-xs') }} Built for real patterns</span>
+        <h2>Recognises the threats women actually report</h2>
+        <p>Fake profiles using your photographs. A login from a city you have never visited. Someone who knows your address. A message demanding money to keep an image private. CYBERAURA's interpreter is built around these patterns, not around generic security advice.</p>
+        <ul class="feature-list">
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span> Eight incident categories with escalation signals that raise the risk level.</li>
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span> Image-based abuse guidance that never asks you to pay or redistribute material.</li>
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span> Honest labelling: simulated rule-based analysis is never presented as a model result.</li>
+        </ul>
+        <a class="btn btn-outline" href="{{ url_for('main.threat') }}">Try the interpreter {{ ui.icon('arrow-right', 'icon icon-sm') }}</a>
+      </div>
+    </div>
+
+    <div class="showcase reveal">
+      <div class="showcase-media">
+        <img src="{{ url_for('static', filename='img/women-community.webp') }}" alt="A circle of women collaborating around a table with laptops and notebooks, warm light and a faint protective network motif connecting them." loading="lazy" width="1000" height="750">
+        <div class="showcase-badge"><span class="icon-tile info">{{ ui.icon('users', 'icon icon-sm') }}</span><div><strong>Anonymous by default</strong><span>No account needed to contribute</span></div></div>
+      </div>
+      <div class="showcase-copy">
+        <span class="eyebrow">{{ ui.icon('heart', 'icon icon-xs') }} Women's Safety Feedback &amp; Resource Hub</span>
+        <h2>Safety knowledge, shared by women</h2>
+        <p>Individual tools protect one person. A community protects everyone. The hub collects what women actually face online, turns it into beginner-friendly guidance, and lets the most-supported ideas decide what gets built next.</p>
+        <ul class="feature-list">
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span> Six short digital-safety lessons with progress saved on your device.</li>
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span> Pick what happened and get the verified reporting route for it.</li>
+          <li><span class="tick">{{ ui.icon('check', 'icon icon-xs') }}</span> Anonymous challenge notes and a community suggestions board you can support.</li>
+        </ul>
+        <div class="flex gap-12 wrap">
+          <a class="btn btn-primary" href="{{ url_for('main.community') }}">Enter the community hub {{ ui.icon('arrow-right', 'icon icon-sm') }}</a>
+          <a class="btn btn-ghost" href="{{ url_for('main.community') }}#feedback">Share a challenge anonymously</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="shell">
+    <div class="empower reveal" id="empowerBanner">
+      <img class="empower-img" src="{{ url_for('static', filename='img/empowerment-banner.webp') }}" alt="A woman standing at a bright window holding a tablet, with a faint protective network pattern of light on the wall beside her." loading="lazy" width="1600" height="914">
+      <div class="empower-inner">
+        <span class="eyebrow">{{ ui.icon('heart', 'icon icon-xs') }} Special category · Women Empowerment</span>
+        <h2>Digital independence is a safety feature</h2>
+        <p>Women and girls are targeted with impersonation, stalking, blackmail and image-based abuse at rates that generic security tools were never designed for. CYBERAURA treats digital confidence as infrastructure: understand the threat, keep the evidence, follow a plan, reach real support.</p>
+        <div class="empower-stats">
+          <div class="empower-stat"><strong data-count="8">0</strong><span>incident categories interpreted</span></div>
+          <div class="empower-stat"><strong data-count="8">0</strong><span>verified support routes mapped</span></div>
+          <div class="empower-stat"><strong data-count="100" data-suffix="%">0</strong><span>of evidence kept on your device</span></div>
+        </div>
+        <div class="flex gap-12 wrap">
+          <a class="btn btn-light" href="{{ url_for('main.community') }}">{{ ui.icon('users', 'icon icon-sm') }} Shape the platform</a>
+          <a class="btn btn-glass" href="{{ url_for('main.about') }}">Our commitments {{ ui.icon('arrow-right', 'icon icon-sm') }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell">
+    <div class="section-head center reveal">
+      <span class="eyebrow">{{ ui.icon('chart', 'icon icon-xs') }} Impact indicators</span>
+      <h2>Measured in completed actions, not page views</h2>
+      <p>These counters track meaningful safety actions. The baseline figures below are <strong>sample demonstration data</strong>, not real-world impact claims; your own actions in this prototype increment them.</p>
+    </div>
+    <div class="stat-grid">
+      {% set stats = [
+        ('assessments_completed', 'Privacy assessments completed', 'privacy'),
+        ('response_plans_generated', 'Incident response plans generated', 'layers'),
+        ('integrity_checks_completed', 'Evidence integrity checks completed', 'fingerprint'),
+        ('recommendations_completed', 'Security recommendations completed', 'check'),
+        ('learning_completed', 'Digital safety learning activities completed', 'book')
+      ] %}
+      {% for key, label, icon in stats %}
+      <div class="stat-card reveal reveal-delay-{{ loop.index }}">
+        <span class="icon-tile" style="margin-bottom:14px">{{ ui.icon(icon, 'icon icon-sm') }}</span>
+        <div class="stat-value" data-count="{{ impact.get(key, 0) }}">0</div>
+        <div class="stat-label">{{ label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="tiny text-center mt-16 reveal">Sample data for demonstration. Counters reset when the local database is recreated.</p>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="shell">
+    <div class="section-head center reveal">
+      <span class="eyebrow">{{ ui.icon('target', 'icon icon-xs') }} The difference</span>
+      <h2>What changes when there is a plan</h2>
+    </div>
+    <div class="compare reveal">
+      <div class="compare-col before">
+        <h3><span class="icon-tile danger">{{ ui.icon('alert', 'icon icon-sm') }}</span> Without a structured response</h3>
+        <ul class="compare-list">
+          <li>{{ ui.icon('x', 'icon icon-sm') }} Screenshots deleted or scattered across chats, with no way to show they are unchanged.</li>
+          <li>{{ ui.icon('x', 'icon icon-sm') }} Reporting to the wrong place, then starting again from zero.</li>
+          <li>{{ ui.icon('x', 'icon icon-sm') }} Paying or replying under pressure because nothing else is obvious.</li>
+          <li>{{ ui.icon('x', 'icon icon-sm') }} Carrying the whole situation alone, with no record of what was already done.</li>
+        </ul>
+      </div>
+      <div class="compare-vs"><span>VS</span></div>
+      <div class="compare-col after">
+        <h3><span class="icon-tile success">{{ ui.icon('shield-check', 'icon icon-sm') }}</span> With CYBERAURA</h3>
+        <ul class="compare-list">
+          <li>{{ ui.icon('check', 'icon icon-sm') }} Evidence organised locally with a SHA-256 fingerprint and a re-verification action.</li>
+          <li>{{ ui.icon('check', 'icon icon-sm') }} The correct official route identified, with guidance on what to prepare.</li>
+          <li>{{ ui.icon('check', 'icon icon-sm') }} Clear, calm first actions — including what not to do.</li>
+          <li>{{ ui.icon('check', 'icon icon-sm') }} A phased checklist and downloadable summary that show real progress.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell">
+    <div class="cta-band reveal">
+      <span class="eyebrow" style="background:rgba(255,255,255,.16);color:#fff">{{ ui.icon('bolt', 'icon icon-xs') }} Ready when you are</span>
+      <h2>Take the first step in under two minutes</h2>
+      <p>Run the exposure assessment, or open a demo workspace and walk the complete journey with fictional sample data. Nothing sensitive is required.</p>
+      <div class="cta-actions">
+        <a class="btn btn-light btn-lg" href="{{ url_for('main.privacy') }}">Start Security Check</a>
+        <form method="post" action="{{ url_for('main.demo') }}" class="inline-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button class="btn btn-glass btn-lg" type="submit">{{ ui.icon('play', 'icon icon-sm') }} Try Demo</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/landing.js') }}" defer></script>
+{% endblock %}

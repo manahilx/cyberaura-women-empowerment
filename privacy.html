@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}Digital Exposure Assessment — CYBERAURA{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="shell page-hero-grid">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Home</a>{{ ui.icon('arrow-right', 'icon icon-xs') }}<span>Privacy Check</span></nav>
+      <span class="eyebrow reveal">{{ ui.icon('privacy', 'icon icon-xs') }} Digital exposure assessment</span>
+      <h1 class="reveal reveal-delay-1">Know what the world<br>can already see.</h1>
+      <p class="reveal reveal-delay-2">Eight honest questions about your visibility and account habits produce a transparent readiness score out of 100, the exposure categories behind it, and a prioritised list of what to close first.</p>
+      <div class="flex gap-12 wrap mt-16 reveal reveal-delay-3">
+        <span class="pill pill-soft">{{ ui.icon('eye', 'icon icon-xs') }} Self-assessment · no scanning</span>
+        <span class="pill pill-outline">{{ ui.icon('chart', 'icon icon-xs') }} Every deduction explained</span>
+      </div>
+    </div>
+    <div class="page-hero-media reveal reveal-delay-2">
+      <img src="{{ url_for('static', filename='img/privacy-assessment.webp') }}" alt="A frosted glass circular gauge ring with floating chips representing phone, email, location and key exposures." width="1000" height="750">
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="shell">
+    <div class="notice notice-info reveal mb-24">
+      {{ ui.icon('info', 'icon icon-sm') }}
+      <div><strong>This is a self-assessment.</strong> CYBERAURA does not scan the internet, search for your personal information, or connect to your accounts. The score reflects only the answers you give, and the calculation is shown in full.</div>
+    </div>
+
+    <div class="workspace">
+      <div class="stack">
+        <div class="panel reveal">
+          <div class="panel-head">
+            <h3>{{ ui.icon('note', 'icon icon-sm') }} Your visibility and habits</h3>
+            <span class="pill pill-soft" id="answeredCount">0 / {{ questions|length }} answered</span>
+          </div>
+          <div class="panel-body">
+            <div class="progress-track mb-24"><div class="progress-fill" id="assessBar"></div></div>
+            <div class="flex flex-col gap-16" id="questionList">
+              {% for q in questions %}
+              <div class="question-card" data-key="{{ q.key }}" data-weight="{{ q.weight }}">
+                <div class="question-head">
+                  <span class="icon-tile">{{ ui.icon(q.icon, 'icon icon-sm') }}</span>
+                  <div>
+                    <h4>{{ q.question }}</h4>
+                    <p>{{ q.help }}</p>
+                  </div>
+                  <span class="pill pill-outline" style="margin-left:auto;flex-shrink:0">{{ q.weight }} pts</span>
+                </div>
+                <div class="answer-row" role="group" aria-label="{{ q.question }}">
+                  <button type="button" class="answer-btn" data-value="yes" aria-pressed="false">Yes</button>
+                  <button type="button" class="answer-btn" data-value="no" aria-pressed="false">No</button>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <div class="divider"></div>
+            <div class="flex gap-12 wrap items-center">
+              <button class="btn btn-primary btn-lg" id="calcScore" disabled>{{ ui.icon('gauge', 'icon icon-sm') }} Calculate my score</button>
+              <button class="btn btn-ghost" id="resetAssessment">Reset answers</button>
+              <span class="tiny" id="calcHint">Answer all {{ questions|length }} questions to calculate.</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="assessmentResult" hidden></div>
+      </div>
+
+      <aside class="sticky-col">
+        <div class="card reveal">
+          <h3 style="margin-bottom:18px">Privacy readiness</h3>
+          <div id="scoreRing" style="margin:0 auto 16px"></div>
+          <p class="tiny text-center" id="scoreNote">Answer the questions to see your score. Higher is better.</p>
+          <div class="divider"></div>
+          <div class="flex flex-col gap-8">
+            <div class="flex justify-between items-center"><span class="pill pill-success">80–100</span><span class="tiny">Strong</span></div>
+            <div class="flex justify-between items-center"><span class="pill pill-info">60–79</span><span class="tiny">Moderate</span></div>
+            <div class="flex justify-between items-center"><span class="pill pill-warning">40–59</span><span class="tiny">Elevated</span></div>
+            <div class="flex justify-between items-center"><span class="pill pill-danger">0–39</span><span class="tiny">Priority</span></div>
+          </div>
+        </div>
+
+        <div class="card reveal reveal-delay-1">
+          <h3 style="margin-bottom:14px">Exposure by category</h3>
+          <div id="exposureMeters"><p class="tiny">Your category breakdown appears here after the assessment.</p></div>
+        </div>
+
+        <div class="card reveal reveal-delay-2">
+          <h3 style="margin-bottom:14px">Score history</h3>
+          <div id="scoreHistory"><p class="tiny">Complete an assessment to start tracking progress over time.</p></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/privacy.js') }}" defer></script>
+{% endblock %}

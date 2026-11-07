@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}Security Dashboard — CYBERAURA{% endblock %}
+
+{% block content %}
+<section class="section-tight" style="padding-top:36px">
+  <div class="shell">
+    <div class="dash-welcome reveal">
+      <div>
+        <span class="eyebrow">{{ ui.icon('gauge', 'icon icon-xs') }} Security dashboard</span>
+        <h1 style="font-size:clamp(1.7rem,3vw,2.3rem);margin-bottom:8px">Welcome back, <span id="welcomeName">…</span></h1>
+        <p class="muted" id="welcomeSub">Here is your current digital safety position.</p>
+      </div>
+      <div class="flex gap-12 wrap items-center">
+        <span class="pill pill-outline" id="todayDate"></span>
+        <a class="btn btn-primary btn-sm" href="{{ url_for('main.threat') }}">{{ ui.icon('radar', 'icon icon-xs') }} New analysis</a>
+        <button class="btn btn-ghost btn-sm" id="clearWorkspace">{{ ui.icon('trash', 'icon icon-xs') }} Clear my data</button>
+      </div>
+    </div>
+    <div class="notice notice-lav reveal mb-24" id="demoNotice" hidden>
+      {{ ui.icon('info', 'icon icon-sm') }}
+      <div><strong>Demonstration workspace.</strong> The records below are fictional sample data created so the full journey can be explored safely. Your own actions add to them.</div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="card col-4 reveal">
+        <div class="flex justify-between items-center mb-16">
+          <h3>Privacy readiness</h3>
+          <span class="pill pill-soft" id="readinessBand">—</span>
+        </div>
+        <div id="readinessRing" style="margin:0 auto 14px"></div>
+        <p class="tiny text-center" id="readinessNote">Loading your assessment…</p>
+        <div class="divider"></div>
+        <div id="trendChart"></div>
+        <a class="btn btn-outline btn-sm btn-block mt-16" href="{{ url_for('main.privacy') }}">{{ ui.icon('privacy', 'icon icon-xs') }} Update assessment</a>
+      </div>
+
+      <div class="card col-4 reveal reveal-delay-1">
+        <div class="flex justify-between items-center mb-16">
+          <h3>Threat summary</h3>
+          <span class="pill pill-outline" id="analysisTotal">0 analyses</span>
+        </div>
+        <div id="riskDonut" style="margin:0 auto 10px"></div>
+        <div class="legend" id="riskLegend" style="justify-content:center"></div>
+        <div class="divider"></div>
+        <div class="flex flex-col gap-12" id="recentAnalyses"></div>
+      </div>
+
+      <div class="card col-4 reveal reveal-delay-2">
+        <div class="flex justify-between items-center mb-16">
+          <h3>Response progress</h3>
+          <span class="pill pill-soft" id="planTotal">0 plans</span>
+        </div>
+        <div id="responseRing" style="margin:0 auto 14px"></div>
+        <p class="tiny text-center" id="responseNote">—</p>
+        <div class="divider"></div>
+        <div class="flex flex-col gap-12" id="planMiniList"></div>
+        <a class="btn btn-outline btn-sm btn-block mt-16" href="{{ url_for('main.response') }}">{{ ui.icon('layers', 'icon icon-xs') }} Open Response Center</a>
+      </div>
+
+      <div class="card col-8 reveal">
+        <div class="flex justify-between items-center mb-16">
+          <h3>Analyses by incident category</h3>
+          <span class="tiny">Demonstration + your activity</span>
+        </div>
+        <div id="categoryBars"></div>
+        <div class="divider"></div>
+        <div class="flex justify-between items-center mb-16">
+          <h3 style="font-size:1rem">Recent activity timeline</h3>
+        </div>
+        <ul class="timeline" id="activityTimeline"></ul>
+      </div>
+
+      <div class="card col-4 reveal reveal-delay-1">
+        <div class="flex justify-between items-center mb-16">
+          <h3>Evidence vault</h3>
+          <span class="pill pill-soft">{{ ui.icon('lock', 'icon icon-xs') }} local</span>
+        </div>
+        <div id="vaultRing" style="margin:0 auto 14px"></div>
+        <div class="flex flex-col gap-12">
+          <div class="flex justify-between items-center"><span class="tiny">Records on this device</span><strong id="dashVaultCount" style="font-family:var(--font-head)">0</strong></div>
+          <div class="flex justify-between items-center"><span class="tiny">Integrity verified</span><strong id="dashVaultVerified" style="font-family:var(--font-head)">0</strong></div>
+          <div class="flex justify-between items-center"><span class="tiny">Total size</span><strong id="dashVaultSize" style="font-family:var(--font-head)">0 B</strong></div>
+        </div>
+        <div class="divider"></div>
+        <p class="tiny">Evidence is read directly from this browser's IndexedDB. It is never sent to the server.</p>
+        <a class="btn btn-outline btn-sm btn-block mt-16" href="{{ url_for('main.vault') }}">{{ ui.icon('folder', 'icon icon-xs') }} Open Evidence Vault</a>
+      </div>
+
+      <div class="card col-7 reveal">
+        <div class="flex justify-between items-center mb-16">
+          <h3>Active security recommendations</h3>
+          <span class="tiny">Prioritised by impact</span>
+        </div>
+        <div class="flex flex-col gap-12" id="recommendations"></div>
+      </div>
+
+      <div class="card col-5 reveal reveal-delay-1">
+        <h3 style="margin-bottom:16px">Quick access</h3>
+        <div class="quick-grid">
+          <a class="quick-card" href="{{ url_for('main.threat') }}"><span class="icon-tile">{{ ui.icon('radar', 'icon icon-sm') }}</span><strong>Threat Interpreter</strong><span>Classify a new incident</span></a>
+          <a class="quick-card" href="{{ url_for('main.vault') }}"><span class="icon-tile success">{{ ui.icon('fingerprint', 'icon icon-sm') }}</span><strong>Evidence Vault</strong><span>Fingerprint and verify files</span></a>
+          <a class="quick-card" href="{{ url_for('main.privacy') }}"><span class="icon-tile info">{{ ui.icon('privacy', 'icon icon-sm') }}</span><strong>Privacy Check</strong><span>Measure your exposure</span></a>
+          <a class="quick-card" href="{{ url_for('main.resources') }}"><span class="icon-tile warning">{{ ui.icon('compass', 'icon icon-sm') }}</span><strong>Resource Navigator</strong><span>Verified Pakistan support</span></a>
+        </div>
+        <div class="divider"></div>
+        <h3 style="margin-bottom:12px;font-size:1rem">Community impact <span class="pill pill-outline" style="margin-left:6px">sample data</span></h3>
+        <div class="grid-2" id="impactMini"></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}" defer></script>
+{% endblock %}

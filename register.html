@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}Create your account — CYBERAURA{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-visual">
+    <img src="{{ url_for('static', filename='img/hero-shield.webp') }}" alt="A luminous three-dimensional protective shield surrounded by orbiting security nodes and a soft lavender aura." width="1400" height="933">
+    <div class="auth-visual-copy">
+      <span class="eyebrow" style="background:rgba(255,255,255,.16);color:#fff">{{ ui.icon('sparkles', 'icon icon-xs') }} Start in seconds</span>
+      <h2>Take control of your<br>digital world.</h2>
+      <p>Create a private workspace to interpret threats, fingerprint evidence, measure your exposure and follow a calm response plan — all in one place.</p>
+      <div class="flex gap-12 wrap mt-16">
+        <span class="pill" style="background:rgba(255,255,255,.16);color:#fff">{{ ui.icon('check', 'icon icon-xs') }} Free to use</span>
+        <span class="pill" style="background:rgba(255,255,255,.16);color:#fff">{{ ui.icon('lock', 'icon icon-xs') }} Minimal data</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-card">
+      <a class="brand" href="{{ url_for('main.index') }}" style="margin-bottom:28px">{{ ui.logo() }}<span class="brand-text"><span class="brand-name">CYBERAURA</span></span></a>
+      <h1>Create your account</h1>
+      <p class="muted" style="margin-bottom:24px">Your identity. Your privacy. Your digital control.</p>
+
+      {% if error %}
+      <div class="form-error mb-16">{{ ui.icon('alert', 'icon icon-sm') }}<span>{{ error }}</span></div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('main.register') }}" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="field">
+          <label class="field-label" for="name">What should we call you?</label>
+          <input class="input" type="text" id="name" name="name" autocomplete="name" required minlength="2" maxlength="60" placeholder="Your name or a nickname" value="{{ name or '' }}">
+          <p class="field-help">A nickname is fine — use whatever feels safe.</p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="email">Email address</label>
+          <input class="input" type="email" id="email" name="email" autocomplete="email" required maxlength="180" placeholder="you@example.com" value="{{ email or '' }}">
+        </div>
+        <div class="field">
+          <label class="field-label" for="password">Password</label>
+          <input class="input" type="password" id="password" name="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters">
+          <p class="field-help">Mix letters with numbers or symbols. Stored only as a salted hash.</p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="confirm">Confirm password</label>
+          <input class="input" type="password" id="confirm" name="confirm" autocomplete="new-password" required minlength="8" placeholder="Repeat your password">
+        </div>
+        <button class="btn btn-primary btn-block btn-lg" type="submit">{{ ui.icon('shield-check', 'icon icon-sm') }} Create my workspace</button>
+      </form>
+
+      <div class="divider"></div>
+
+      <form method="post" action="{{ url_for('main.demo') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button class="btn btn-soft btn-block" type="submit">{{ ui.icon('play', 'icon icon-sm') }} Explore a demo first</button>
+      </form>
+
+      <p class="auth-alt">Already have an account? <a href="{{ url_for('main.login') }}">Sign in</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

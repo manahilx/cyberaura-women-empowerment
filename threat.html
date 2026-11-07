@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}AI Threat Interpreter — CYBERAURA{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="shell page-hero-grid">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Home</a>{{ ui.icon('arrow-right', 'icon icon-xs') }}<span>Threat Analysis</span></nav>
+      <span class="eyebrow reveal">{{ ui.icon('radar', 'icon icon-xs') }} AI Threat Interpreter</span>
+      <h1 class="reveal reveal-delay-1">Tell us what happened.<br>We will help you read it.</h1>
+      <p class="reveal reveal-delay-2">Describe the incident in your own words. CYBERAURA identifies the likely category, explains the warning signs it detected, assesses the risk level and gives you calm, practical first actions.</p>
+      <div class="flex gap-12 wrap mt-16 reveal reveal-delay-3">
+        <span class="pill {{ 'pill-live' if ai_enabled else 'pill-soft' }}"><span class="dot dot-pulse"></span> {{ 'Configured AI API active' if ai_enabled else 'Rule-based interpreter · simulated analysis' }}</span>
+        <span class="pill pill-outline">{{ ui.icon('lock', 'icon icon-xs') }} Narrative never stored on the server</span>
+      </div>
+    </div>
+    <div class="page-hero-media reveal reveal-delay-2">
+      <img src="{{ url_for('static', filename='img/threat-interpreter.webp') }}" alt="Isometric threat-analysis console with a radar sweep, floating alert cards and a magnifying lens examining a message bubble." width="1000" height="750">
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="shell workspace">
+    <div class="stack">
+      <div class="panel reveal">
+        <div class="panel-head">
+          <h3>{{ ui.icon('note', 'icon icon-sm') }} Report an incident</h3>
+          <button type="button" class="btn btn-soft btn-sm" id="loadSample">{{ ui.icon('play', 'icon icon-xs') }} Load sample incident</button>
+        </div>
+        <div class="panel-body">
+          <form id="incidentForm" novalidate>
+            <div class="field">
+              <span class="field-label" id="catLabel">1. What kind of incident is this?</span>
+              <div class="category-grid" role="radiogroup" aria-labelledby="catLabel">
+                {% for c in categories %}
+                <label class="category-option">
+                  <input type="radio" name="category" value="{{ c.key }}" {% if loop.first %}checked{% endif %}>
+                  <span class="category-tile">
+                    <span class="icon-tile {{ 'danger' if c.accent == 'danger' else ('warning' if c.accent == 'warning' else '') }}">{{ ui.icon(c.icon, 'icon icon-sm') }}</span>
+                    <span><strong>{{ c.label }}</strong><span>{{ c.short }}</span></span>
+                  </span>
+                </label>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="description">2. Describe what happened</label>
+              <textarea class="textarea" id="description" name="description" maxlength="4000" placeholder="For example: someone created an account using my photographs and is messaging people I know. Include what you saw, when it started and whether it is continuing." required></textarea>
+              <div class="char-count"><span id="charNow">0</span> / 4000 characters · minimum 20</div>
+              <p class="field-help">Write only what you are comfortable sharing. Do not include identity numbers, addresses or intimate material. Your description is processed in memory and is not written to the database.</p>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="platform">3. Where did this happen?</label>
+              <select class="select" id="platform" name="platform">
+                {% for p in platforms %}<option value="{{ p }}">{{ p }}</option>{% endfor %}
+              </select>
+            </div>
+
+            <div class="notice notice-lav mb-16">
+              {{ ui.icon('info', 'icon icon-sm') }}
+              <div><strong>Processing notice.</strong> Submitting sends your category, platform and description to this application's interpreter. {{ 'A configured external AI API will process the text.' if ai_enabled else 'No external AI service is configured, so a local rule-based engine produces a simulated analysis.' }} Only non-sensitive metadata (category, platform, risk band, matched signal names) is saved to your workspace.</div>
+            </div>
+
+            <label class="check-line mb-16">
+              <input type="checkbox" id="consent">
+              <span>I understand this is preliminary guidance, not a legal finding, and I consent to my description being processed as described above.</span>
+            </label>
+
+            <div class="flex gap-12 wrap">
+              <button class="btn btn-primary btn-lg" type="submit" id="analyzeBtn">{{ ui.icon('radar', 'icon icon-sm') }} Analyse incident</button>
+              <button class="btn btn-ghost" type="reset" id="resetForm">Clear form</button>
+            </div>
+            <div id="formError" class="form-error mt-16" hidden>{{ ui.icon('alert', 'icon icon-sm') }}<span></span></div>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel" id="loadingPanel" hidden>
+        <div class="analysis-loading">
+          <div class="scan-orb" aria-hidden="true">
+            <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+            <span class="sweep"></span>
+            <span class="core">{{ ui.icon('radar', 'icon icon-lg') }}</span>
+          </div>
+          <h3>Interpreting your incident</h3>
+          <p class="muted" style="font-size:.9rem">Matching your description against known threat patterns.</p>
+          <ul class="scan-steps" id="scanSteps">
+            <li data-step="0"><span class="step-dot">{{ ui.icon('check', 'icon icon-xs') }}</span> Reading category and platform context</li>
+            <li data-step="1"><span class="step-dot">{{ ui.icon('check', 'icon icon-xs') }}</span> Matching detection patterns</li>
+            <li data-step="2"><span class="step-dot">{{ ui.icon('check', 'icon icon-xs') }}</span> Checking escalation signals</li>
+            <li data-step="3"><span class="step-dot">{{ ui.icon('check', 'icon icon-xs') }}</span> Preparing guidance and next steps</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="analysisResult" hidden></div>
+    </div>
+
+    <aside class="sticky-col">
+      <div class="card reveal">
+        <span class="icon-tile mb-16">{{ ui.icon('eye') }}</span>
+        <h3 style="margin-bottom:10px">How the interpretation works</h3>
+        <p class="tiny mb-16">The interpreter matches your description against detection patterns for each incident category, then checks cross-category escalation signals such as threats to physical safety, intimate imagery, location knowledge or financial demands.</p>
+        <div class="divider"></div>
+        <div class="flex flex-col gap-12">
+          <div class="flex gap-12 items-center"><span class="pill pill-danger">High</span><span class="tiny">Serious escalation signals present. Act promptly and seek official support.</span></div>
+          <div class="flex gap-12 items-center"><span class="pill pill-warning">Medium</span><span class="tiny">Recognised risk pattern. Preserve evidence and tighten account security.</span></div>
+          <div class="flex gap-12 items-center"><span class="pill pill-success">Low</span><span class="tiny">Limited signals detected. Monitor, document and reduce exposure.</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal reveal-delay-1">
+        <h3 style="margin-bottom:12px">Your recent analyses</h3>
+        <div id="recentAnalyses"><div class="skeleton" style="height:16px;margin-bottom:10px"></div><div class="skeleton" style="height:16px;width:70%"></div></div>
+      </div>
+
+      <div class="notice notice-warning reveal reveal-delay-2">
+        {{ ui.icon('alert', 'icon icon-sm') }}
+        <div><strong>If you are in immediate danger,</strong> contact emergency services first. Police emergency 15 and Rescue 1122 are listed in the <a href="{{ url_for('main.resources') }}">Resource Navigator</a>.</div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section-tight" style="padding-bottom:80px">
+  <div class="shell">
+    <div class="section-head center reveal">
+      <span class="eyebrow">{{ ui.icon('grid', 'icon icon-xs') }} Incident categories</span>
+      <h2>Patterns the interpreter is built around</h2>
+    </div>
+    <div class="grid-4 category-explain">
+      {% for c in categories %}
+      <div class="card card-pad-sm card-hover reveal reveal-delay-{{ (loop.index0 % 4) + 1 }}">
+        <span class="icon-tile {{ 'danger' if c.accent == 'danger' else ('warning' if c.accent == 'warning' else '') }}" style="margin-bottom:12px">{{ ui.icon(c.icon, 'icon icon-sm') }}</span>
+        <h4 style="font-size:.9rem;margin-bottom:6px">{{ c.label }}</h4>
+        <p class="tiny">{{ c.short }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script type="application/json" id="demoIncident">{{ demo_incident|tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/threat.js') }}" defer></script>
+{% endblock %}

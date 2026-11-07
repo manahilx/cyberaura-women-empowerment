@@ -1,0 +1,13 @@
+# Local secrets and runtime state
+.env
+instance/
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.sqlite3-journal
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

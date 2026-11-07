@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}{{ code }} · {{ title }} — CYBERAURA{% endblock %}
+
+{% block content %}
+<section class="section" style="min-height:60vh;display:grid;place-items:center">
+  <div class="shell-narrow text-center">
+    <div class="error-orb reveal" aria-hidden="true">
+      <span class="ring"></span><span class="ring"></span>
+      <span class="core">{{ ui.icon('compass', 'icon icon-lg') }}</span>
+    </div>
+    <div class="error-code reveal reveal-delay-1">{{ code }}</div>
+    <h1 class="reveal reveal-delay-2" style="margin-bottom:14px">{{ title }}</h1>
+    <p class="muted reveal reveal-delay-3" style="max-width:480px;margin:0 auto 30px">{{ message }}</p>
+    <div class="flex gap-12 wrap reveal reveal-delay-4" style="justify-content:center">
+      <a class="btn btn-primary" href="{{ url_for('main.index') }}">{{ ui.icon('shield', 'icon icon-sm') }} Back to safety</a>
+      <a class="btn btn-outline" href="{{ url_for('main.resources') }}">{{ ui.icon('compass', 'icon icon-sm') }} Find support</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

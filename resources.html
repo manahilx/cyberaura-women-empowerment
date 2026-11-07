@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}Pakistan Safety Resource Navigator — CYBERAURA{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="shell page-hero-grid">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Home</a>{{ ui.icon('arrow-right', 'icon icon-xs') }}<span>Resource Navigator</span></nav>
+      <span class="eyebrow reveal">{{ ui.icon('compass', 'icon icon-xs') }} Pakistan safety resources</span>
+      <h1 class="reveal reveal-delay-1">Verified help,<br>when it matters most.</h1>
+      <p class="reveal reveal-delay-2">A curated directory of official Pakistani cybercrime, technical response, women's support and emergency services. Every website and contact below was checked against the organisation's own published pages — no invented numbers.</p>
+      <div class="flex gap-12 wrap mt-16 reveal reveal-delay-3">
+        <span class="pill pill-success">{{ ui.icon('badge', 'icon icon-xs') }} {{ resources|length }} verified organisations</span>
+        <span class="pill pill-outline">{{ ui.icon('external', 'icon icon-xs') }} Links open safely in a new tab</span>
+      </div>
+    </div>
+    <div class="page-hero-media reveal reveal-delay-2">
+      <img src="{{ url_for('static', filename='img/resources-network.webp') }}" alt="A luminous network of connected nodes over a soft map, each node a verified support organisation linked by protective pathways." width="1000" height="750">
+    </div>
+  </div>
+</section>
+
+<section class="section-tight" style="padding-top:8px">
+  <div class="shell">
+    <div class="notice notice-warning reveal mb-24">
+      {{ ui.icon('siren', 'icon icon-sm') }}
+      <div><strong>In immediate physical danger?</strong> Contact emergency services first — police <a href="tel:15">15</a> or rescue <a href="tel:1122">1122</a> — before completing any online reporting. Online threats that reference real-world harm belong with emergency services.</div>
+    </div>
+
+    <div class="resource-toolbar reveal">
+      <div class="search-wrap">
+        {{ ui.icon('search', 'icon icon-sm') }}
+        <input type="search" class="input" id="resourceSearch" placeholder="Search by name, purpose or keyword…" aria-label="Search resources" autocomplete="off">
+      </div>
+      <div class="filter-chips" id="resourceFilters" role="group" aria-label="Filter by organisation type">
+        <button type="button" class="chip is-active" data-type="all">All</button>
+        {% for t in resource_types %}<button type="button" class="chip" data-type="{{ t }}">{{ t }}</button>{% endfor %}
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-16 reveal">
+      <p class="tiny" id="resourceCount" aria-live="polite">Showing {{ resources|length }} organisations</p>
+      <span class="verified-line">{{ ui.icon('shield-check', 'icon icon-xs') }} Checked against official published sources</span>
+    </div>
+
+    <div class="resource-grid" id="resourceGrid">
+      {% for r in resources %}
+      <article class="resource-card reveal" data-type="{{ r.type }}" data-search="{{ (r.name ~ ' ' ~ r.purpose ~ ' ' ~ r.tags|join(' '))|lower }}">
+        <div class="resource-head">
+          <span class="icon-tile {{ r.accent if r.accent in ['success','warning','danger','info'] else '' }}">{{ ui.icon(r.icon) }}</span>
+          <div style="flex:1;min-width:0">
+            <h3>{{ r.name }}</h3>
+            <span class="pill pill-soft" style="margin-top:8px">{{ r.type }}</span>
+          </div>
+        </div>
+        <p class="resource-purpose">{{ r.purpose }}</p>
+        {% if r.contacts %}
+        <div class="flex flex-col gap-8">
+          {% for c in r.contacts %}
+          <div class="contact-row">
+            <span class="label">{{ c.label }}</span>
+            <a href="{{ c.href }}">{{ c.value }}</a>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <div class="resource-guidance">{{ ui.icon('info', 'icon icon-xs') }} {{ r.guidance }}</div>
+        <div class="resource-foot">
+          <a class="btn btn-outline btn-sm" href="{{ r.website }}" target="_blank" rel="noopener noreferrer">{{ ui.icon('globe', 'icon icon-xs') }} Website {{ ui.icon('external', 'icon icon-xs') }}</a>
+          <a class="btn btn-primary btn-sm" href="{{ r.report_url }}" target="_blank" rel="noopener noreferrer">{{ ui.icon('arrow-up-right', 'icon icon-xs') }} {{ r.report_label }}</a>
+        </div>
+        <div class="verified-line">{{ ui.icon('badge', 'icon icon-xs') }} {{ r.verified }}</div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="empty-state" id="resourceEmpty" hidden>
+      <span class="icon-tile">{{ ui.icon('search', 'icon icon-lg') }}</span>
+      <h4>No matching organisations</h4>
+      <p>Try a different keyword or clear the type filter to see the full directory.</p>
+      <button class="btn btn-outline" id="resourceReset">{{ ui.icon('refresh', 'icon icon-sm') }} Clear filters</button>
+    </div>
+
+    <p class="tiny mt-24" style="max-width:760px">Contact details are included only where the organisation publishes them on its own official website. Procedures and numbers can change — always confirm on the official site before relying on them. CYBERAURA does not operate these services and cannot guarantee outcomes.</p>
+  </div>
+</section>
+
+<section class="section" id="learning" style="background:linear-gradient(180deg, transparent, rgba(234,228,244,.4) 30%, transparent)">
+  <div class="shell-narrow">
+    <div class="section-head center reveal">
+      <span class="eyebrow" style="margin-inline:auto">{{ ui.icon('book', 'icon icon-xs') }} Digital safety learning</span>
+      <h2>Test your instincts,<br>sharpen your defences.</h2>
+      <p>Four short scenarios drawn from real attack patterns. Answer each one, read the reasoning, and record your completion to contribute to the community learning indicator.</p>
+    </div>
+
+    <div class="card reveal mb-24" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+      <span class="icon-tile info">{{ ui.icon('target') }}</span>
+      <div style="flex:1;min-width:200px">
+        <strong style="font-family:var(--font-head)" id="quizProgressLabel">0 of {{ quiz|length }} answered</strong>
+        <div class="progress-track mt-8"><div class="progress-fill" id="quizBar"></div></div>
+      </div>
+      <span class="pill pill-soft" id="quizScore">Score: —</span>
+    </div>
+
+    <div class="flex flex-col gap-20" id="quizList">
+      {% for q in quiz %}
+      <div class="card quiz-question reveal" data-answer="{{ q.answer }}" data-q="{{ loop.index0 }}">
+        <div class="flex gap-14 items-center mb-16">
+          <span class="quiz-num">{{ loop.index }}</span>
+          <h4 style="font-size:.98rem;line-height:1.5">{{ q.q }}</h4>
+        </div>
+        <div class="flex flex-col gap-10">
+          {% for opt in q.options %}
+          <button type="button" class="quiz-option" data-index="{{ loop.index0 }}">
+            <span class="marker">{{ 'ABC'[loop.index0] }}</span>
+            <span>{{ opt }}</span>
+          </button>
+          {% endfor %}
+        </div>
+        <div class="quiz-why notice notice-lav mt-16" hidden>{{ ui.icon('info', 'icon icon-sm') }}<div>{{ q.why }}</div></div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="flex gap-12 wrap items-center mt-24 reveal">
+      <button class="btn btn-primary" id="quizComplete" disabled>{{ ui.icon('badge', 'icon icon-sm') }} Record my completion</button>
+      <button class="btn btn-ghost" id="quizReset">{{ ui.icon('refresh', 'icon icon-sm') }} Try again</button>
+      <span class="tiny" id="quizHint">Answer all four scenarios to record your completion.</span>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/resources.js') }}" defer></script>
+{% endblock %}

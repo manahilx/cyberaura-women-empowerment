@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as ui %}
+{% block title %}Women's Safety Feedback & Resource Hub — CYBERAURA{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="shell page-hero-grid">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Home</a>{{ ui.icon('arrow-right', 'icon icon-xs') }}<span>Community Hub</span></nav>
+      <span class="eyebrow reveal">{{ ui.icon('users', 'icon icon-xs') }} Women empowerment · community</span>
+      <h1 class="reveal reveal-delay-1">Safety knowledge,<br>shared by women.</h1>
+      <p class="reveal reveal-delay-2">A community hub that turns lived experience into collective protection: beginner-friendly guidance, digital safety learning, a verified reporting directory, and anonymous feedback and suggestions that shape what CYBERAURA builds next.</p>
+      <div class="flex gap-12 wrap mt-16 reveal reveal-delay-3">
+        <span class="pill pill-success">{{ ui.icon('lock', 'icon icon-xs') }} Anonymous by default</span>
+        <span class="pill pill-soft">{{ ui.icon('book', 'icon icon-xs') }} Beginner friendly</span>
+        <span class="pill pill-outline">{{ ui.icon('badge', 'icon icon-xs') }} Verified directory</span>
+      </div>
+    </div>
+    <div class="page-hero-media reveal reveal-delay-2">
+      <img src="{{ url_for('static', filename='img/women-community.webp') }}" alt="A circle of women collaborating around a table with laptops and notebooks, warm light and a faint protective network motif connecting them." width="1000" height="750">
+    </div>
+  </div>
+</section>
+
+<section class="section-tight" style="padding-top:8px">
+  <div class="shell">
+    <div class="notice notice-warning reveal mb-24">
+      {{ ui.icon('siren', 'icon icon-sm') }}
+      <div><strong>In immediate physical danger?</strong> Contact emergency services first — police <a href="tel:15">15</a> or rescue <a href="tel:1122">1122</a>. This hub is peer guidance and community input, not a monitored emergency or crisis channel.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Beginner guidance -->
+<section class="section-tight" id="guides">
+  <div class="shell">
+    <div class="flex items-center justify-between wrap gap-16 mb-24 reveal">
+      <div class="section-head mb-0">
+        <span class="eyebrow">{{ ui.icon('sparkles', 'icon icon-xs') }} Start here</span>
+        <h2>Accessible guidance for beginners</h2>
+        <p>Plain-language, step-by-step guides for the moments that matter most. No jargon, no judgement — open any guide and follow the numbered steps.</p>
+      </div>
+      <button type="button" class="btn btn-outline btn-sm" id="textSizeToggle" aria-pressed="false">{{ ui.icon('accessibility', 'icon icon-sm') }} Larger text</button>
+    </div>
+    <div class="card hub-guides reveal" id="guideAccordion">
+      {% for g in guides %}
+      <div class="acc-item {{ 'is-open' if loop.first }}">
+        <button type="button" class="acc-trigger" aria-expanded="{{ 'true' if loop.first else 'false' }}">
+          <span class="icon-tile {{ 'success' if loop.index is odd else 'info' }}">{{ ui.icon(g.icon, 'icon icon-sm') }}</span>
+          <span>{{ g.title }}</span>
+          <span class="pill pill-outline">{{ g.minutes }} min</span>
+          {{ ui.icon('minus', 'icon icon-sm chev') }}
+        </button>
+        <div class="acc-panel"><div class="acc-panel-inner"><div class="acc-content">
+          <ol class="hub-steps">
+            {% for s in g.steps %}<li>{{ s }}</li>{% endfor %}
+          </ol>
+          <div class="notice notice-lav mt-16">{{ ui.icon('info', 'icon icon-sm') }}<div>{{ g.tip }}</div></div>
+        </div></div></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Learning resources -->
+<section class="section" id="learning">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow">{{ ui.icon('book', 'icon icon-xs') }} Digital safety learning</span>
+      <h2>Learn the skills that keep you safe</h2>
+      <p>Short, practical lessons you can read at your own pace. Mark each one as learned to track your progress, then test yourself with the scenario quiz.</p>
+    </div>
+    <div class="hub-learning reveal">
+      <aside class="card hub-progress">
+        <div id="learnRing" class="hub-ring"></div>
+        <h3>Your learning progress</h3>
+        <p class="tiny" id="learnCount">0 of {{ lessons|length }} lessons learned</p>
+        <div class="bar-track mt-16"><span class="bar-fill" id="learnBar" style="background:linear-gradient(90deg,var(--violet),var(--purple))"></span></div>
+        <a class="btn btn-primary btn-block mt-24" href="{{ url_for('main.resources') }}#learning">{{ ui.icon('badge', 'icon icon-sm') }} Take the scenario quiz</a>
+        <p class="tiny mt-16">Progress is saved on this device only. The quiz records completion against your workspace.</p>
+      </aside>
+      <div class="grid-2 hub-lessons">
+        {% for l in lessons %}
+        <article class="card card-hover hub-lesson" data-lesson="{{ l.id }}">
+          <div class="flex items-center justify-between gap-12">
+            <span class="icon-tile {{ l.accent }}">{{ ui.icon(l.icon, 'icon icon-sm') }}</span>
+            <span class="pill {{ 'pill-success' if l.level == 'Beginner' else 'pill-info' }}">{{ l.level }}</span>
+          </div>
+          <h3>{{ l.title }}</h3>
+          <p>{{ l.summary }}</p>
+          <div class="flex items-center justify-between gap-12 mt-16">
+            <span class="tiny">{{ ui.icon('clock', 'icon icon-xs') }} {{ l.minutes }} min read</span>
+            <button type="button" class="btn btn-soft btn-sm hub-open-lesson" data-lesson="{{ l.id }}">{{ ui.icon('book', 'icon icon-xs') }} Open lesson</button>
+          </div>
+          <span class="hub-learned-badge" hidden>{{ ui.icon('check', 'icon icon-xs') }} Learned</span>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Reporting & support directory -->
+<section class="section-tight" id="reporting">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow">{{ ui.icon('scales', 'icon icon-xs') }} Reporting & support</span>
+      <h2>Find the right route, fast</h2>
+      <p>Choose what happened and get a plain-language first step, an ordered action list, and the verified organisations that handle it — with official reporting links.</p>
+    </div>
+    <div class="hub-report reveal">
+      <div class="card hub-situations">
+        <h3 class="mb-16">What happened?</h3>
+        <div class="hub-situation-list" id="situationList" role="group" aria-label="Choose a situation">
+          {% for s in situations %}
+          <button type="button" class="hub-situation {{ 'is-active' if loop.first }}" data-situation="{{ s.id }}">
+            {{ ui.icon(s.icon, 'icon icon-sm') }}<span>{{ s.label }}</span>
+          </button>
+          {% endfor %}
+        </div>
+        <a class="btn btn-ghost btn-block mt-16" href="{{ url_for('main.resources') }}">{{ ui.icon('compass', 'icon icon-sm') }} Full resource directory</a>
+      </div>
+      <div class="card hub-route" id="routePanel" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Anonymous feedback + themes -->
+<section class="section" id="feedback">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow">{{ ui.icon('message', 'icon icon-xs') }} Anonymous feedback</span>
+      <h2>Tell us about a safety challenge</h2>
+      <p>Share what you or women you know face online. No account, no name, no email — your note is stored anonymously and aggregated to prioritise safer guidance.</p>
+    </div>
+    <div class="grid-2 hub-feedback reveal">
+      <form class="card" id="challengeForm" novalidate>
+        <div class="form-error" id="challengeError" hidden></div>
+        <div class="field">
+          <label class="field-label" for="challengeCategory">What kind of challenge?</label>
+          <select class="select" id="challengeCategory" required>
+            <option value="">Choose a category…</option>
+            {% for c in challenge_categories %}<option value="{{ c }}">{{ c }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="challengePlatform">Where did it happen? <span class="tiny">(optional)</span></label>
+          <select class="select" id="challengePlatform">
+            <option value="">Prefer not to say / elsewhere</option>
+            {% for p in platforms %}<option value="{{ p }}">{{ p }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="challengeMessage">Describe the challenge</label>
+          <textarea class="textarea" id="challengeMessage" rows="5" maxlength="2000" placeholder="What happened, what was hard about getting help, what would have made it easier…"></textarea>
+          <div class="flex justify-between gap-12"><span class="field-help">20–2000 characters. No names, contacts or identifying details.</span><span class="tiny" id="challengeCount">0</span></div>
+        </div>
+        <label class="check-line mb-16">
+          <input type="checkbox" id="challengeConsent">
+          <span>I confirm this note contains no personal or identifying information, and I understand this is not an emergency or monitored support channel.</span>
+        </label>
+        <button class="btn btn-primary btn-block" type="submit" id="challengeSubmit">{{ ui.icon('message', 'icon icon-sm') }} Submit anonymously</button>
+        <div class="notice notice-success mt-16" id="challengeSuccess" hidden>{{ ui.icon('check', 'icon icon-sm') }}<div></div></div>
+      </form>
+      <aside class="card hub-themes">
+        <div class="flex items-center justify-between gap-12 mb-16">
+          <h3>What the community is telling us</h3>
+          <span class="pill pill-soft">live</span>
+        </div>
+        <p class="tiny mb-16">Anonymous submissions grouped by theme, including sample demonstration notes. Your note updates this chart immediately.</p>
+        <div id="themeBars"></div>
+        <div class="notice notice-info mt-24">{{ ui.icon('lock', 'icon icon-sm') }}<div>Notes are stored without any identity. Only the category and platform are aggregated — never who wrote it.</div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- Suggestions board -->
+<section class="section-tight" id="suggestions">
+  <div class="shell">
+    <div class="section-head reveal">
+      <span class="eyebrow">{{ ui.icon('sparkles', 'icon icon-xs') }} Suggestions from women</span>
+      <h2>Shape what we build next</h2>
+      <p>Propose an idea and, if you choose, share it anonymously on the community board. Support the suggestions that matter to you — the most-supported ideas rise to the top.</p>
+    </div>
+    <div class="hub-suggest reveal">
+      <form class="card" id="suggestionForm" novalidate>
+        <div class="form-error" id="suggestionError" hidden></div>
+        <div class="field">
+          <label class="field-label" for="suggestionTitle">Your idea, in a sentence</label>
+          <input class="input" id="suggestionTitle" maxlength="120" placeholder="e.g. Add Urdu-language beginner guides">
+        </div>
+        <div class="field">
+          <label class="field-label" for="suggestionCategory">Category</label>
+          <select class="select" id="suggestionCategory">
+            {% for c in suggestion_categories %}<option value="{{ c }}">{{ c }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="suggestionBody">Why it would help</label>
+          <textarea class="textarea" id="suggestionBody" rows="4" maxlength="1200" placeholder="Who it helps and what changes for them…"></textarea>
+        </div>
+        <label class="check-line mb-16">
+          <input type="checkbox" id="suggestionShare" checked>
+          <span>Share my idea anonymously on the community board so others can support it.</span>
+        </label>
+        <label class="check-line mb-16">
+          <input type="checkbox" id="suggestionConsent">
+          <span>I confirm this contains no personal or identifying information.</span>
+        </label>
+        <button class="btn btn-primary btn-block" type="submit" id="suggestionSubmit">{{ ui.icon('plus', 'icon icon-sm') }} Submit suggestion</button>
+        <div class="notice notice-success mt-16" id="suggestionSuccess" hidden>{{ ui.icon('check', 'icon icon-sm') }}<div></div></div>
+      </form>
+      <div class="card hub-board">
+        <div class="flex items-center justify-between wrap gap-12 mb-16">
+          <h3>Community board</h3>
+          <select class="select select-sm" id="boardSort" aria-label="Sort suggestions">
+            <option value="supported">Most supported</option>
+            <option value="newest">Newest</option>
+          </select>
+        </div>
+        <div class="filter-chips mb-16" id="boardFilters" role="group" aria-label="Filter suggestions by category">
+          <button type="button" class="chip is-active" data-cat="all">All</button>
+          {% for c in suggestion_categories %}<button type="button" class="chip" data-cat="{{ c }}">{{ c }}</button>{% endfor %}
+        </div>
+        <div class="hub-board-list" id="boardList" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Participation strip -->
+<section class="section-tight">
+  <div class="shell">
+    <div class="notice notice-lav reveal">
+      {{ ui.icon('heart', 'icon icon-sm') }}
+      <div><strong>Co-designed with women.</strong> This hub exists because community input changes what gets built. Read how participation works, or explore the verified directory behind every reporting route. <a href="{{ url_for('main.about') }}#participate">How participation works</a> · <a href="{{ url_for('main.resources') }}">Resource Navigator</a></div>
+    </div>
+  </div>
+</section>
+
+<script type="application/json" id="hubData">{{ {
+  'lessons': lessons,
+  'situations': situations,
+  'resources': resources,
+  'suggestions': suggestions,
+  'themes': themes
+}|tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/community.js') }}" defer></script>
+{% endblock %}
